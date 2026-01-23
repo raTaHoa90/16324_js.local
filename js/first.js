@@ -4,6 +4,8 @@ var num123_$ = 123,
     NUM123_$ = 'string value';
 let varEmpty;
 
+const NUM_FIRST = 1;
+
 // camelCase  => numberOfCode
 // snake_case => number_of_code
 // PascalCase => NumberOfCode

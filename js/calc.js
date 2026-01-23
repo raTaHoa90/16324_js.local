@@ -4,7 +4,7 @@ var backValue = 0,
 
 
 function addDigit( btn ) {
-    let input = document.getElementById('display'); // найти Input id='display'
+    const input = document.getElementById('display'); // найти Input id='display'
 
     if(input.value === "0" || operation == '='){
         input.value = btn.value;
@@ -19,7 +19,7 @@ function setDot(){
     if(hasDot)
         return;
 
-    let input = document.getElementById('display');
+    const input = document.getElementById('display');
 
     hasDot = true;
     if(operation == '='){
@@ -30,7 +30,7 @@ function setDot(){
 }
 
 function backSpace(){
-    let input = document.getElementById('display'),
+    const input = document.getElementById('display'),
         len = input.value.length;
     
     if(input.value[len - 1] == '.')
@@ -76,8 +76,8 @@ function calcOperation(value){
 }
 
 function setOperation(oper){
-    let input = document.getElementById('display'),
-        value = 0;
+    const input = document.getElementById('display');
+    let value = 0;
 
     value = calcOperation(+input.value);
 
@@ -88,8 +88,8 @@ function setOperation(oper){
 }
 
 function enterCalc() {
-    let input = document.getElementById('display'),
-        value = 0;
+    const input = document.getElementById('display');
+    let value = 0;
 
     value = calcOperation(+input.value);
 

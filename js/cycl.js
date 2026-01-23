@@ -43,3 +43,27 @@ for(let car of cars) {
     document.writeln('<li>' + car + '</li>');
 }
 document.writeln('</ul>');
+
+
+
+document.writeln('BREAK<br><hr><ul>');
+for(let car of cars) {
+    if(car == 'kia')
+        break; // останавить дальнейшую работу цикла
+    document.writeln('<li>' + car + '</li>');
+}
+document.writeln('</ul>');
+
+
+document.writeln('CONTINUE<br><hr><ul>');
+for(let car of cars) {
+    if(car == 'kia')
+        continue; // останавить дальнейшую работу цикла
+    document.writeln('<li>' + car + '</li>');
+}
+document.writeln('</ul>');
+
+
+document.writeln('ForEeach<br><hr><ul>');
+cars.forEach(car => document.writeln('<li>' + car + '</li>') );
+document.writeln('</ul>');
