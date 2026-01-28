@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Домашняя библиотека</title>
-    <script src="js/Library.js"></script>
+    <script src="js/Library2.js"></script>
     <style>
         .panel {
             border: solid 1px black;
@@ -15,7 +15,50 @@
         }
     </style>
     <script>
+        function testError(){
+            try{
+                throw 'Тут Ошибка'; // создаем собственную ошибку
+            }finally{
+                console.log('Все равно выводится');
+            }
+        }
+
+        //let a;
+        try{
+            console.log(a.b.d); // происходит ошибка
+
+        }catch(error){// ловим оштбку, и обрабатываем ее
+
+            // проверяем ошибку на определенные типы ошибок
+            if(error instanceof TypeError) 
+                console.log('Ошибка типа');
+            else if(error instanceof ReferenceError)
+                console.log('Отсутствует переменная');
+            console.log(error.message);
+
+        }finally{
+            // выполняем что-то вне зависимости от того есть ошибка или нет
+            console.log('finally');
+        }
+
+        try{
+            testError();
+        }catch(error){
+            console.log(error);
+        }
+
         var library = new Library("Библиотека книг", "library", 'viewTable');
+
+        library.onStartEdit = function(book, bookName){
+            document.getElementById('nameBook').value = bookName;
+            document.getElementById('author').value = book.author;
+            document.getElementById('bookDesc').value = book.desc;
+            document.getElementById('numBookcase').value = book.numBookcase;
+            document.getElementById('numShelf').value = book.numShelf;
+            document.getElementById('updateBook').value = bookName;
+
+            document.getElementById('editBookInfo').showModal();
+        }
 
         function loadPage(){
             library.init();
@@ -24,25 +67,51 @@
             //document.getElementById('viewTable').innerHTML = library.getTable();
         }
 
-        function AddBook(){
+        function ApplySaveBook(){
             let nameBook = document.getElementById('nameBook'),
+                author = document.getElementById('author'),
                 bookDesc = document.getElementById('bookDesc'),
                 numBookcase = document.getElementById('numBookcase'),
-                numShelf = document.getElementById('numShelf');
-            library.add(
-                nameBook.value, 
-                bookDesc.value, 
-                numBookcase.value, 
-                numShelf.value
-            );
-            nameBook.value = '';
-            bookDesc.value = '';
-            numBookcase.value = '';
-            numShelf.value = '';
+                numShelf = document.getElementById('numShelf'),
+                oldNameBook = document.getElementById('updateBook');
+
+            if(oldNameBook.value === ''){
+                library.add(
+                    nameBook.value, 
+                    bookDesc.value, 
+                    numBookcase.value, 
+                    numShelf.value,
+                    author.value
+                );
+            } else {
+                library.replace(
+                    oldNameBook.value,
+                    nameBook.value, 
+                    bookDesc.value, 
+                    numBookcase.value, 
+                    numShelf.value,
+                    author.value
+                );
+            }
 
             library.draw();
-
             library.save();
+
+            document.getElementById('editBookInfo').close();
+        }
+
+        function openNewBook(){
+            document.getElementById('editBookInfo').showModal();
+            document.getElementById('nameBook').value = '';
+            document.getElementById('author').value = '';
+            document.getElementById('bookDesc').value = '';
+            document.getElementById('numBookcase').value = '';
+            document.getElementById('numShelf').value = '';
+            document.getElementById('updateBook').value = '';
+        }
+
+        function CloseDialog(){
+            document.getElementById('editBookInfo').close();
         }
     </script>
 </head>
@@ -50,31 +119,41 @@
     <h1>Домашняя библиотека</h1>
     <div id="viewTable"></div>
 
-    <div class="panel">
-        <table>
-            <tr>
-                <td>Название книги</td>
-                <td><input id="nameBook"></td>
-            </tr>
-            <tr>
-                <td>Описание</td>
-                <td><textarea id="bookDesc" rows="10" cols="50"></textarea></td>
-            </tr>
-            <tr>
-                <td>Номер шкафа</td>
-                <td><input id="numBookcase"></td>
-            </tr>
-            <tr>
-                <td>Номер полки</td>
-                <td><input type="number" min="1" max="20" id="numShelf"></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <input type="button" value="Добавить" onclick="AddBook()">
-                </td>
-            </tr>
-        </table>
-    </div>
+    <input type="button" value="Добавить новую книгу" onclick="openNewBook()">
+
+    <dialog id="editBookInfo" closedby="any">
+        <input type="hidden" value="" id="updateBook">
+        <div class="panel">
+            <table>
+                <tr>
+                    <td>Название книги</td>
+                    <td><input id="nameBook"></td>
+                </tr>
+                <tr>
+                    <td>Автор произведения
+                    <td><input id="author"></td>
+                </tr>
+                <tr>
+                    <td>Описание</td>
+                    <td><textarea id="bookDesc" rows="10" cols="50"></textarea></td>
+                </tr>
+                <tr>
+                    <td>Номер шкафа</td>
+                    <td><input id="numBookcase"></td>
+                </tr>
+                <tr>
+                    <td>Номер полки</td>
+                    <td><input type="number" min="1" max="20" id="numShelf"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input type="button" value="Сохранить" onclick="ApplySaveBook()">
+                        <input type="button" value="Отмена" onclick="CloseDialog()">
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </dialog>
 </body>
 </html>

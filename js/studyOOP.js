@@ -124,6 +124,7 @@ console.log(library);
 // =======================================================================
 
 function Library(name, data){
+    var privateVar = 0;
     this.NAME = name;
     this.length = 0;
 
@@ -220,6 +221,7 @@ function Library2(name, data){
 //Library2.prototype = Library;
 Library2.prototype = Object.create(Library.prototype);
 Library2.prototype.constructor = Library2;
+Library.staticVar = 123;
 
 let lib5 = new Library2('СуперШкаф', lib3);
 console.log(lib5);
