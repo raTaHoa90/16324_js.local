@@ -5,14 +5,16 @@ function* idMaker(){
 }
 
 class Book {
+    static libraryVar = "";
     bookName; 
     desc; 
     numBookcase; 
     numShelf;
     author;
+    pageStop;
 
     static head(){
-        return '<th>Название</th><th>Автор</th><th>Описание</th><th>Номер шкафа</th><th>Номер полки</th><th>Действия</th>'
+        return '<th>Название</th><th>Автор</th><th>Описание</th><th>Номер шкафа</th><th>Номер полки</th><th>Действия</th><th>Закладка страницы</th>'
     }
 
     constructor(...args){
@@ -22,21 +24,36 @@ class Book {
             this.replace(...ars);
     }
 
-    replace(bookName = '', desc = '', numBookcase = '1', numShelf = '1', author = ''){
+    replace(bookName = '', desc = '', numBookcase = '1', numShelf = '1', author = '', pageStop = 0){
         this.bookName = bookName;
         this.desc = desc;
         this.numShelf = numShelf;
         this.numBookcase = numBookcase;
         this.author = author;
+        this.pageStop = pageStop;
+    }
+
+    setPage(page){
+        this.pageStop = page;
+        let elem = document.querySelector('[data-bookName="'+ this.bookName +'"]');
+        if(elem)
+            elem.value = page;
     }
 
     draw(varName){
+        let getBook = `let book = ${Book.libraryVar}.getBook('${this.bookName}'); if(book){`,
+            update = `${Book.libraryVar}.save(); }`;
+
         return `<tr>
             <td>${this.bookName}</td>
             <td>${this.author}</td>
             <td>${this.desc}</td>
             <td>${this.numBookcase}</td>
             <td>${this.numShelf}</td>
+            <td><input type=button value="-"                 onclick="${getBook} book.setPage(book.pageStop - 1); ${update}">
+                <input type=number value="${this.pageStop}"  onchange="${getBook} book.setPage(+this.value); ${update}" data-bookName="${this.bookName}">
+                <input type=button value="+"                 onclick="${getBook} book.setPage(book.pageStop + 1); ${update}">
+            </td>
             <td>
                 <input type=button value="Редактировать" onclick="${varName}.edit('${this.bookName}')">
                 <input type=button value="Удалить" onclick="${varName}.remove('${this.bookName}');">
@@ -111,6 +128,10 @@ class Library{
             this.#length--;
         }
     };
+
+    getBook(nameBook) {
+        return this.#books[nameBook] !== undefined ? this.#books[nameBook] : null;
+    }
     
     search(num){ return Object.keys(this.#books)[num]; }
 
@@ -146,6 +167,7 @@ class Library{
     }
 
     draw(){
+        Book.libraryVar = this.#varName;
         this.#view.innerHTML = this.getTable();
     }
 
