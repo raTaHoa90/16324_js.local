@@ -7,14 +7,33 @@
         <!-- <script src="js/first.js"></script> -->
         <!-- <script src="js/func.js"></script> -->
         <!--script src="js/studyOOPNew.js"></script-->
+        <script src="https://code.jquery.com/jquery-4.0.0.min.js"></script>
+        <script src="js/l2/cansavAPI.js"></script>
         <script>
+            $(function(){
+                $.post('js/data/users.json', {a:1, b:2}, function(req){
+                    console.log(req);
+                    $("div > u").html(req.id);
+                    
+                    $('#result').html(JSON.stringify(req));
+                }, 'json');
 
+                setTimeout(function(){
+                    let audio = $('#sound')[0];
+                    audio.play();
+                }, 2000);
+            });
         </script>
     </head>
-    <body>
-        <div>
+    <body >
+        <canvas id="holst" style="position:absolute; top:0"></canvas>
+        <div style="position:absolute; top:50px">
             <span class="asd sda lkjdfg gdcxzv"><i>test</i> text <b>bold</b></span>
             <u>next</u>
         </div>
+
+        <div id="result">
+        </div>
+        <audio id="sound" controls src="https://developer.mozilla.org/shared-assets/audio/t-rex-roar.mp3"></audio>
     </body>
 </html>
